@@ -1,5 +1,5 @@
 import sys
-
+import numpy as np
 from About import AboutWindow
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg, NavigationToolbar2QT
 from matplotlib.figure import Figure
@@ -47,9 +47,18 @@ class IceCreamApp(QMainWindow):
         self.plot_data()
 
     def load_data(self):
-        self.selected_file, _ = QFileDialog.getOpenFileName(
-            self, "Load Data", "", "CSV Files (*.csv)"
-        )
+        filename, _ = QFileDialog.getOpenFileName(self, "Select a file")
+        if filename:
+            self.temperatures = []
+            self.revenues = []
+            with open(filename, "r") as f:
+                next(f)
+                for line in f:
+                    parts = line.strip().split(",")
+                    self.temperatures.append(float(parts[0]))
+                    self.revenues.append(float(parts[1]))
+            self.plot_data()
+        
 
     def show_about(self):
         self.about_window = AboutWindow()
@@ -57,11 +66,12 @@ class IceCreamApp(QMainWindow):
 
     def plot_data(self):
         self.axes.clear()
-        self.axes.plot([1, 2, 3, 4], [3, 5, 4, 7], color="#e97c5b", marker="o")
-        self.axes.set_title("Ice Cream Sales")
-        self.axes.set_xlabel("Day")
-        self.axes.set_ylabel("Sales")
-        self.axes.grid(True, alpha=0.25)
+        self.axes.scatter(self.temperatures, self.revenues, s=1)
+        self.axes.set_title("Ice Cream Revenue vs Temperature")
+        self.axes.set_xlabel("Temperature (°C)")
+        self.axes.set_ylabel("Revenue ($)")
+        self.axes.spines["top"].set_visible(False)
+        self.axes.spines["right"].set_visible(False)
         self.figure.tight_layout()
         self.canvas.draw()
 
