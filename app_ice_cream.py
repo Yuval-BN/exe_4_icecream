@@ -1,5 +1,4 @@
 import sys
-from pathlib import Path
 
 from About import AboutWindow
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg, NavigationToolbar2QT
@@ -18,7 +17,7 @@ class IceCreamApp(QMainWindow):
         self.setWindowTitle("Ice Cream Sales")
         self.resize(900, 600)
 
-        with open(Path(__file__).with_name("style.qss"), "r") as style_file:
+        with open("style.qss", "r") as style_file:
             self.setStyleSheet(style_file.read())
 
         central_widget = QWidget()
