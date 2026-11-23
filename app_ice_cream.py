@@ -67,6 +67,18 @@ class IceCreamApp(QMainWindow):
     def plot_data(self):
         self.axes.clear()
         self.axes.scatter(self.temperatures, self.revenues, s=1)
+        if self.temperatures:
+            slope, intercept = np.polyfit(self.temperatures, self.revenues, 1)
+            trendline_x = np.linspace(min(self.temperatures), max(self.temperatures), 100)
+            trendline_y = slope * trendline_x + intercept
+            self.axes.plot(trendline_x, trendline_y, color="red")
+            self.axes.text(
+                0.05,
+                0.95,
+                f"y = {slope:.2f}x + {intercept:.2f}",
+                transform=self.axes.transAxes,
+                verticalalignment="top",
+            )
         self.axes.set_title("Ice Cream Revenue vs Temperature")
         self.axes.set_xlabel("Temperature (°C)")
         self.axes.set_ylabel("Revenue ($)")
